@@ -138,7 +138,7 @@ const HomeScreen = ({navigation}) => {
 
             {isEnabled && <FlatList
                 data={DATA}
-                renderItem={({item}) => <CategoryItem category={item} navigation={navigation}q:q />}
+                renderItem={({item}) => <CategoryItem category={item} navigation={navigation} />}
                 keyExtractor={item => item.id}
             />}
 
@@ -146,6 +146,16 @@ const HomeScreen = ({navigation}) => {
                 navigation={navigation}
                 data={DATA}
             />}
+
+            <Pressable
+                style={styles.button}
+                onPress={() =>
+                    navigation.navigate('EditAppliance', {})
+                }
+            >
+                <Text style={styles.title}>Add appliance</Text>
+            </Pressable>
+
         </SafeAreaView>
     );
 };

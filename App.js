@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import ApplianceScreen from './screens/ApplianceScreen'
+import EditApplianceScreen from "./screens/EditApplianceScreen";
 
 const Stack = createNativeStackNavigator();
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
               options={{title: 'HoReMi'}}
           />
           <Stack.Screen name="Appliance" component={ApplianceScreen} />
+          <Stack.Screen name="EditAppliance" component={EditApplianceScreen} />
         </Stack.Navigator>
       </NavigationContainer>
   );
