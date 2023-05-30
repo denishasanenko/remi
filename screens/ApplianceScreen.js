@@ -1,19 +1,22 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {ApplianceContext} from "../contexts/ApplianceContext";
+import ApplianceService from "../services/ApplianceService";
 
 const ApplianceScreen = ({navigation, route}) => {
-    console.log(route.params)
+    const {applianceData} = useContext(ApplianceContext);
+    const appliance = ApplianceService.findById(applianceData, route.params.id)
     return (
         <View>
             <Pressable
                 style={styles.button}
                 onPress={() =>
-                    navigation.navigate('EditAppliance', {id: route.params.id, title: route.params.title})
+                    navigation.navigate('EditAppliance', {id: appliance.id})
                 }
             >
                 <Text style={styles.title}>Edit</Text>
             </Pressable>
-            <Text>Appliance screen for {route.params.title}</Text>
+            <Text>Appliance screen for {appliance.title}</Text>
         </View>
     )
 }

@@ -1,87 +1,16 @@
 import {SafeAreaView, Switch, StyleSheet, Text, View, FlatList, Pressable} from "react-native";
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
+import ApplianceService from "../services/ApplianceService";
+import {ApplianceContext} from "../contexts/ApplianceContext";
 
 /* serviceStatus
  * 1 - low
  * 2 - normal (1 month due date)
  * 3 - high (1 week due date)
  */
-const DATA = [
-    {
-        id: 1,
-        title: 'Автомобілі',
-        applianceList: [
-            {
-                id: 11,
-                title: 'Opel GrandlandX',
-                serviceDate: '',
-                serviceStatus: 3
-            },
-            {
-                id: 12,
-                title: 'Nissan Micra',
-                serviceDate: '',
-                serviceStatus: 2
-            },
-            {
-                id: 13,
-                title: 'Kia Sorento',
-                serviceDate: '',
-                serviceStatus: 1
-            }
-        ]
-    },
-    {
-        id: 2,
-        title: 'Фільтри',
-        applianceList: [
-            {
-                id: 21,
-                title: 'Вугільний',
-                serviceDate: '',
-                serviceStatus: 1
-            },
-            {
-                id: 22,
-                title: 'Механічний',
-                serviceDate: '',
-                serviceStatus: 2
-            }
-        ]
-    },
-    {
-        id: 3,
-        title: 'Аккумулятори',
-        applianceList: [
-            {
-                id: 31,
-                title: 'Mi Powerbank',
-                serviceDate: '',
-                serviceStatus: 3
-            },
-            {
-                id: 32,
-                title: 'EcoFlow',
-                serviceDate: '',
-                serviceStatus: 1
-            }
-        ]
-    },
-    {
-        id: 4,
-        title: 'Інше',
-        applianceList: []
-    }
-];
 
 const FlatApplianceList = ({data,navigation}) => {
-    console.log()
-    const applianceList = data.reduce((acc, item) => {
-        const list = item.applianceList.map(appliance => {
-            return {...appliance, category: {id: item.id, title: item.title}}
-        })
-        return [...acc, ...list]
-    }, []);
+    const applianceList = ApplianceService.flatten(data)
     return (
         <FlatList
             data={applianceList}
@@ -91,13 +20,12 @@ const FlatApplianceList = ({data,navigation}) => {
     )
 }
 const ApplianceItem = ({appliance, categoryIcon,navigation}) => {
-    console.log(categoryIcon)
     return (
         <View style={styles.item}>
             <Pressable
                 style={styles.button}
                 onPress={() =>
-                    navigation.navigate('Appliance', {id: appliance.id, title: appliance.title})
+                    navigation.navigate('Appliance', {id: appliance.id})
                 }
             >
                 <Text style={styles.title}>{appliance.title}</Text>
@@ -120,7 +48,9 @@ const CategoryItem = ({category,navigation}) => {
     )
 }
 const HomeScreen = ({navigation}) => {
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(null);
+
+    const { applianceData } = useContext(ApplianceContext);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     return (
         <SafeAreaView style={styles.container}>
@@ -137,14 +67,14 @@ const HomeScreen = ({navigation}) => {
             </Text>
 
             {isEnabled && <FlatList
-                data={DATA}
+                data={applianceData}
                 renderItem={({item}) => <CategoryItem category={item} navigation={navigation} />}
                 keyExtractor={item => item.id}
             />}
 
             {!isEnabled && <FlatApplianceList
                 navigation={navigation}
-                data={DATA}
+                data={applianceData}
             />}
 
             <Pressable
