@@ -21,14 +21,14 @@ const FlatApplianceList = ({data,navigation}) => {
 }
 const ApplianceItem = ({appliance, categoryIcon,navigation}) => {
     return (
-        <View style={styles.item}>
+        <View style={styles.applianceItem}>
             <Pressable
-                style={styles.button}
                 onPress={() =>
                     navigation.navigate('Appliance', {id: appliance.id})
                 }
             >
-                <Text style={styles.title}>{appliance.title}</Text>
+                <Text style={styles.applianceItemTitle}>{appliance.title}</Text>
+                <Text style={styles.applianceItemDetails}>Обслуговування через 1 рік</Text>
             </Pressable>
 
         </View>
@@ -37,8 +37,14 @@ const ApplianceItem = ({appliance, categoryIcon,navigation}) => {
 
 const CategoryItem = ({category,navigation}) => {
     return (
-        <View style={styles.item}>
-            <Text style={styles.title}>{category.title}</Text>
+        <View style={styles.categoriesView}>
+            <View style={styles.categoriesViewTitle}>
+                <View style={styles.categoriesViewTitleIcon}></View>
+                <View style={styles.categoriesViewTitleView}>
+                    <Text style={styles.categoriesViewTitleText}>{category.title}</Text>
+                    <Text style={styles.categoriesViewTitleDetailsText}>{category.applianceList.length} пристроїв</Text>
+                </View>
+            </View>
             <FlatList
                 data={category.applianceList}
                 renderItem={({item}) => <ApplianceItem appliance={item} navigation={navigation} />}
@@ -48,31 +54,31 @@ const CategoryItem = ({category,navigation}) => {
     )
 }
 const HomeScreen = ({navigation}) => {
-    const [isEnabled, setIsEnabled] = useState(null);
+    const [listViewMode, setListViewMode] = useState(false);
 
     const { applianceData } = useContext(ApplianceContext);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const toggleSwitch = () => setListViewMode(previousState => !previousState);
     return (
         <SafeAreaView style={styles.container}>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Text>
-                Categories view
+            {/*<Text>
+                List view mode
                 <Switch
                     trackColor={{false: '#767577', true: '#81b0ff'}}
-                    thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                    thumbColor={listViewMode ? '#f5dd4b' : '#f4f3f4'}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={toggleSwitch}
-                    value={isEnabled}
+                    value={listViewMode}
                 />
-            </Text>
+            </Text>*/}
 
-            {isEnabled && <FlatList
+            {!listViewMode && <FlatList
+                style={styles.mainList}
                 data={applianceData}
                 renderItem={({item}) => <CategoryItem category={item} navigation={navigation} />}
                 keyExtractor={item => item.id}
             />}
 
-            {!isEnabled && <FlatApplianceList
+            {listViewMode && <FlatApplianceList
                 navigation={navigation}
                 data={applianceData}
             />}
@@ -106,15 +112,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    category: {
-
-    },
-    appliance: {
-
+        width: '100%',
     },
     item: {
-        backgroundColor: '#f9c2ff',
+        //backgroundColor: '#f9c2ff',
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -122,6 +123,54 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
     },
+    mainList: {
+      width: '100%'
+    },
+    categoriesView: {
+        border: '1px solid #DADADA',
+        borderRadius: '10px',
+        margin: 12
+    },
+    categoriesViewTitle: {
+        flexDirection: 'row',
+        backgroundColor: '#EEEEEE',
+        height: 60,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10
+    },
+    categoriesViewTitleIcon: {
+        width: 42,
+        height: 42,
+        backgroundColor: '#fff',
+        borderRadius: '100%',
+        margin: 9,
+    },
+    categoriesViewTitleView: {
+        margin: 9
+    },
+    categoriesViewTitleText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: 'rgba(0,0,0,0.7)',
+    },
+    categoriesViewTitleDetailsText: {
+        fontSize: 12,
+        color: 'rgba(0,0,0,0.4)',
+    },
+    applianceItem: {
+        margin: 12,
+        borderBottomColor: '#DADADA',
+        borderBottomWidth: 1
+    },
+    applianceItemTitle: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: 'rgba(0,0,0,0.7)'
+    },
+    applianceItemDetails: {
+        fontSize: 12,
+        color: 'rgba(0,0,0,0.4)'
+    }
 });
 
 export default HomeScreen;
