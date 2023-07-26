@@ -2,6 +2,7 @@ import {SafeAreaView, Switch, StyleSheet, Text, View, FlatList, Pressable} from 
 import React, {useState, useContext} from "react";
 import ApplianceService from "../services/ApplianceService";
 import {ApplianceContext} from "../contexts/ApplianceContext";
+import {auth} from "../firebase";
 
 /* serviceStatus
  * 1 - low
@@ -60,6 +61,14 @@ const HomeScreen = ({navigation}) => {
     const toggleSwitch = () => setListViewMode(previousState => !previousState);
     return (
         <SafeAreaView style={styles.container}>
+            <Pressable
+                style={styles.button}
+                onPress={() =>
+                    navigation.navigate('Login', {})
+                }
+            >
+                <Text style={styles.title}>Login</Text>
+            </Pressable>
             {/*<Text>
                 List view mode
                 <Switch
