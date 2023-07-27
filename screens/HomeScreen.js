@@ -61,14 +61,6 @@ const HomeScreen = ({navigation}) => {
     const toggleSwitch = () => setListViewMode(previousState => !previousState);
     return (
         <SafeAreaView style={styles.container}>
-            <Pressable
-                style={styles.button}
-                onPress={() =>
-                    navigation.navigate('Login', {})
-                }
-            >
-                <Text style={styles.title}>Login</Text>
-            </Pressable>
             {/*<Text>
                 List view mode
                 <Switch

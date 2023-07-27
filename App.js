@@ -10,15 +10,25 @@ import LoginScreen from "./screens/LoginScreen";
 import {auth, provider} from "./firebase";
 import {getRedirectResult, GoogleAuthProvider, signOut} from "firebase/auth"
 
+import { createNavigationContainerRef } from '@react-navigation/native';
+
+export const navigationRef = createNavigationContainerRef()
+
 const Stack = createNativeStackNavigator();
 const App = () => {
-    /*const user = auth.currentUser;
+    console.log(Stack)
     auth.onAuthStateChanged((user) => {
+        console.log(user)
         if(!user) {
-            navigator.
+            console.log(navigationRef, navigationRef.isReady())
+            navigationRef.navigate('Login');
+        } else {
+            // signOut(auth)
         }
-    })*/
-    //signOut(auth)
+    })
+    /*const user = auth.currentUser;
+    */
+    //
     /*getRedirectResult(auth)
         .then((result) => {
             console.log(result)
@@ -47,14 +57,24 @@ const App = () => {
     });*/
   return (
       <ApplianceProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#EEEEEE',
+                    borderWidth: 1,
+                    borderColor: '#DADADA',
+                    margin: 12,
+                    width: 'auto'
+                },
+            }}
+        >
           <Stack.Screen
               name="Home"
               component={HomeScreen}
               options={{title: 'HoReMi'}}
           />
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
           <Stack.Screen name="Appliance" component={ApplianceScreen} />
           <Stack.Screen name="EditAppliance" component={EditApplianceScreen} />
         </Stack.Navigator>
