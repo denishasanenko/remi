@@ -4,19 +4,72 @@ import {ApplianceContext} from "../contexts/ApplianceContext";
 const storageKey = '@appliance'
 
 const ApplianceService = {
-    getAppliance: () => {
+    getCategories: () => {
+        return [
+            {
+              id: 1,
+              title: 'Фільтри',
+              icon: 'filter'
+            },
+            {
+                id: 2,
+                title: 'Автомобілі',
+                icon: 'car'
+            },
+            {
+                id: 3,
+                title: 'Моторна техніка',
+                icon: 'other'
+            },
+            {
+                id: 4,
+                title: 'Гігієна',
+                icon: 'other'
+            },
+            {
+                id: 5,
+                title: 'Опалення',
+                icon: 'other'
+            },
+            {
+                id: 6,
+                title: 'Сантехніка',
+                icon: 'plumbing'
+            },
+            {
+                id: 7,
+                title: 'Інше',
+                icon: 'other'
+            },
+            {
+                id: 8,
+                title: 'Електрична техніка',
+                icon: 'other'
+            },
+        ];
+    },
+    getAppliance: async () => {
         return BaseStorageService.getData(storageKey)
     },
-    flatten: (applianceData) => {
+    groupByCategory: (applianceData) => {
+        const categories = ApplianceService.getCategories();
+        const result = categories.map((category) => {
+            category.applianceList = applianceData.filter((appliance) => appliance.categoryId === category.id)
+            return category;
+        })
+        console.log(result.filter((category) => category.length))
+        return result.filter((category) => category.applianceList.length)
+    },
+    /*flatten: (applianceData) => {
         return applianceData.reduce((acc, item) => {
             const list = item.applianceList.map(appliance => {
                 return {...appliance, category: {id: item.id, title: item.title}}
             })
             return [...acc, ...list]
         }, []);
-    },
-    findById: (applianceData, id) => {
-        const data = ApplianceService.flatten(applianceData);
+    },*/
+    findById: async (id) => {
+        const data = await ApplianceService.getAppliance();
         const applianceItem = data.find(item => item.id === id);
         return applianceItem || { category: {} };
     },
@@ -25,35 +78,21 @@ const ApplianceService = {
         const applianceItem = applianceData.find(item => item.title === title);
         return applianceItem || { };
     },
-    upsert: async (applianceData, data) => {
-        let category = ApplianceService.findCategoryByTitle(applianceData, data.category);
-        if (!category.id) {
-            category = {
-                id: applianceData.length+1,
-                title: data.category,
-                applianceList: []
-            };
-            applianceData.push(category);
-        }
-
-        // add logic of changing category
-        console.log(category)
-
-        const applianceIndex = category.applianceList.findIndex(appliance => appliance.id === data.id);
-        if (applianceIndex >= 0) {
-            category.applianceList[applianceIndex].title = data.title;
+    upsert: async (data) => {
+        let applianceList = await ApplianceService.getAppliance();
+        if (data.id) {
+            applianceList = applianceList.map(item => {
+                if (item.id === data.id) {
+                    item = data;
+                }
+                return item;
+            })
         } else {
-            category.applianceList.push({
-                category: {
-                    id: category.id,
-                    title: category.title
-                },
-                id: category.id.toString()+(category.applianceList.length+1),
-                title: data.title
+            applianceList.push({
+                ...data
             })
         }
-
-        await BaseStorageService.setData(storageKey, applianceData)
+        return await BaseStorageService.setData(storageKey, applianceList)
     }
 }
 

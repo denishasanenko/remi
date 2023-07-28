@@ -1,13 +1,23 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {ApplianceContext} from "../contexts/ApplianceContext";
 import ApplianceService from "../services/ApplianceService";
 
 const ApplianceScreen = ({navigation, route}) => {
-    const {applianceData} = useContext(ApplianceContext);
-    const appliance = ApplianceService.findById(applianceData, route.params.id)
+    const [loading, setLoading] = useState(true);
+    const [appliance, setAppliance] = useState({});
+
+    useEffect( () => {
+        const loadData = async () => {
+            setAppliance(await ApplianceService.findById(route.params.id))
+            setLoading(false)
+        }
+        loadData();
+    }, []);
+
     return (
         <View>
+            {loading && <div>Loading...</div>}
             <Pressable
                 style={styles.button}
                 onPress={() =>

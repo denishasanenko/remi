@@ -8,7 +8,7 @@ export const ApplianceProvider = (props) => {
 
     useEffect(() => {
         const getData = async () => {
-            let data = await ApplianceService.getAppliance();
+            let data = ApplianceService.groupByCategory(await ApplianceService.getAppliance());
             setApplianceData(data)
             return data
         }
