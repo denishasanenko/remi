@@ -1,12 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import {TextInput, Text, View, Button, StyleSheet} from 'react-native'
 import {Field, Formik} from 'formik'
-import {ApplianceContext} from "../contexts/ApplianceContext";
 import ApplianceService from "../services/ApplianceService";
 import {Picker} from "@react-native-picker/picker";
 
 const EditApplianceScreen = ({navigation, route}) => {
-    const {applianceData, setApplianceData} = useContext(ApplianceContext);
     const [loading, setLoading] = useState(true);
     const [appliance, setAppliance] = useState({});
     const categories = ApplianceService.getCategories();
@@ -33,7 +31,7 @@ const EditApplianceScreen = ({navigation, route}) => {
                 initialValues={{ id: appliance.id, title: appliance.title, categoryId: appliance.categoryId }}
                 onSubmit={async( values ) => {
                     await ApplianceService.upsert(values);
-                    setApplianceData([]);
+                    // setApplianceData([]);
                     navigation.navigate('Appliance', {id: appliance.id})
                 }}
             >

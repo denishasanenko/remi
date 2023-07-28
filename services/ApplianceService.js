@@ -1,5 +1,7 @@
 import BaseStorageService from "./BaseStorageService";
-import {ApplianceContext} from "../contexts/ApplianceContext";
+import {auth, database} from "../firebase";
+import {doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
+import uuid from 'react-native-uuid';
 
 const storageKey = '@appliance'
 
@@ -37,7 +39,7 @@ const ApplianceService = {
                 icon: 'plumbing'
             },
             {
-                id: 7,
+                id: 999,
                 title: 'Інше',
                 icon: 'other'
             },
@@ -49,9 +51,13 @@ const ApplianceService = {
         ];
     },
     getAppliance: async () => {
-        return BaseStorageService.getData(storageKey)
+        return ApplianceService.groupByCategory((await ApplianceService._getUserDoc()).appliance);
     },
     groupByCategory: (applianceData) => {
+        console.log(applianceData)
+        if (!applianceData) {
+            return []
+        }
         const categories = ApplianceService.getCategories();
         const result = categories.map((category) => {
             category.applianceList = applianceData.filter((appliance) => appliance.categoryId === category.id)
@@ -69,7 +75,10 @@ const ApplianceService = {
         }, []);
     },*/
     findById: async (id) => {
-        const data = await ApplianceService.getAppliance();
+        const data = (await ApplianceService._getUserDoc()).appliance;
+        if (!data) {
+            return {};
+        }
         const applianceItem = data.find(item => item.id === id);
         return applianceItem || { category: {} };
     },
@@ -79,21 +88,40 @@ const ApplianceService = {
         return applianceItem || { };
     },
     upsert: async (data) => {
-        let applianceList = await ApplianceService.getAppliance();
+        let applianceList = (await ApplianceService._getUserDoc()).appliance;
+        const ref = doc(database, "appliance", auth.currentUser.uid);
+
         if (data.id) {
-            applianceList = applianceList.map(item => {
+            const appliance = applianceList.map(item => {
                 if (item.id === data.id) {
                     item = data;
                 }
                 return item;
             })
+            await updateDoc(ref, {
+                appliance
+            })
         } else {
+            console.log(applianceList)
             applianceList.push({
-                ...data
+                id: uuid.v1(),
+                title: data.title,
+                categoryId: data.categoryId
+            })
+            const d = {
+                appliance: applianceList
+            }
+            console.log(d)
+            await updateDoc(ref, {
+                appliance: applianceList
             })
         }
-        return await BaseStorageService.setData(storageKey, applianceList)
-    }
+        return;
+    },
+    _getUserDoc: async () => {
+        const appliance = await getDoc(doc(database, "appliance", auth.currentUser.uid));
+        return appliance.data();
+    },
 }
 
 export default ApplianceService;

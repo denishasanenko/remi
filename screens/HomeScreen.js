@@ -1,7 +1,6 @@
 import {SafeAreaView, StyleSheet, Text, View, FlatList, Pressable, Image} from "react-native";
-import React, {useState, useContext} from "react";
+import React, {useState, useEffect} from "react";
 import ApplianceService from "../services/ApplianceService";
-import {ApplianceContext} from "../contexts/ApplianceContext";
 
 /* serviceStatus
  * 1 - low
@@ -56,11 +55,28 @@ const CategoryItem = ({category,navigation}) => {
     )
 }
 const HomeScreen = ({navigation}) => {
+    console.log(123)
     const [listViewMode, setListViewMode] = useState(false);
+    const [applianceData, setApplianceData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const { applianceData } = useContext(ApplianceContext);
+    useEffect( () => {
+        console.log(12345)
+        const loadData = async () => {
+            setApplianceData(await ApplianceService.getAppliance())
+            setLoading(false)
+        }
+        navigation.addListener('focus', () => {
+            console.log("reloaded");
+            loadData()
+        });
+
+        loadData();
+    }, []);
+
     const toggleSwitch = () => setListViewMode(previousState => !previousState);
     return (
+        loading ? <Text>Loading...</Text> :
         <SafeAreaView style={styles.container}>
             {/*<Text>
                 List view mode

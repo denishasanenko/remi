@@ -1,6 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {ApplianceContext} from "../contexts/ApplianceContext";
 import ApplianceService from "../services/ApplianceService";
 
 const ApplianceScreen = ({navigation, route}) => {
@@ -13,6 +12,11 @@ const ApplianceScreen = ({navigation, route}) => {
             setLoading(false)
         }
         loadData();
+
+        navigation.addListener('focus', () => {
+            console.log("reloaded");
+            loadData()
+        });
     }, []);
 
     return (

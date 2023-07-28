@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
-import { getDatabase } from "firebase/database";
+import { getFirestore  } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,7 +16,8 @@ const firebaseConfig = {
     messagingSenderId: "865381209369",
     appId: "1:865381209369:web:15f1d7e14d10b10d9aa188",
     measurementId: "G-EF5N1J7MEW",
-    databaseURL: "https://horemi-ed1b4.eur3.firebaseio.com",
+    databaseURL: "https://horemi-ed1b4-default-rtdb.europe-west1.firebasedatabase.app",
+
 };
 
 // Initialize Firebase
@@ -25,5 +26,6 @@ const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
 
-const database = getDatabase(app);
+const database = getFirestore(app);
+
 export { app, analytics, database, signInWithRedirect, getRedirectResult };
