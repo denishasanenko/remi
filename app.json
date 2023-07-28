@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "RemiProject",
-    "slug": "RemiProject",
+    "slug": "horemi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.denishasanenko.horemi"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fa7d0b62-2b3f-4000-8744-fa01f20aaaad"
+      }
+    },
+    "owner": "denishasanenko"
   }
 }

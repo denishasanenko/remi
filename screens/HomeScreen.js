@@ -1,8 +1,7 @@
-import {SafeAreaView, Switch, StyleSheet, Text, View, FlatList, Pressable} from "react-native";
+import {SafeAreaView, StyleSheet, Text, View, FlatList, Pressable, Image} from "react-native";
 import React, {useState, useContext} from "react";
 import ApplianceService from "../services/ApplianceService";
 import {ApplianceContext} from "../contexts/ApplianceContext";
-import {auth} from "../firebase";
 
 /* serviceStatus
  * 1 - low
@@ -40,7 +39,9 @@ const CategoryItem = ({category,navigation}) => {
     return (
         <View style={styles.categoriesView}>
             <View style={styles.categoriesViewTitle}>
-                <View style={styles.categoriesViewTitleIcon}></View>
+                <View style={styles.categoriesViewTitleIcon}>
+                    <Image style={{margin: 9, width: 24, height: 24}} source={(require(`../assets/categories/${category.icon}.png`))} />
+                </View>
                 <View style={styles.categoriesViewTitleView}>
                     <Text style={styles.categoriesViewTitleText}>{category.title}</Text>
                     <Text style={styles.categoriesViewTitleDetailsText}>{category.applianceList.length} пристроїв</Text>

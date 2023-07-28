@@ -19,17 +19,17 @@ const ApplianceService = {
             {
                 id: 3,
                 title: 'Моторна техніка',
-                icon: 'other'
+                icon: 'engine'
             },
             {
                 id: 4,
                 title: 'Гігієна',
-                icon: 'other'
+                icon: 'higiene'
             },
             {
                 id: 5,
                 title: 'Опалення',
-                icon: 'other'
+                icon: 'heating'
             },
             {
                 id: 6,
@@ -44,7 +44,7 @@ const ApplianceService = {
             {
                 id: 8,
                 title: 'Електрична техніка',
-                icon: 'other'
+                icon: 'electricity'
             },
         ];
     },
