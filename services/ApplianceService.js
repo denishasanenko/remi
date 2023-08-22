@@ -1,6 +1,6 @@
 import BaseStorageService from "./BaseStorageService";
 import {auth, database} from "../firebase";
-import {doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
+import {doc, getDoc, addDoc, updateDoc, deleteDoc, collection } from "firebase/firestore";
 import uuid from 'react-native-uuid';
 
 const storageKey = '@appliance'
@@ -117,6 +117,15 @@ const ApplianceService = {
             })
         }
         return;
+    },
+    delete: async (data) => {
+        let applianceList = (await ApplianceService._getUserDoc()).appliance;
+        const ref = doc(database, "appliance", auth.currentUser.uid);
+        const appliance = applianceList.filter(item => item.id !== data.id)
+        console.log(appliance, data.id)
+        await updateDoc(ref, {
+            appliance
+        })
     },
     _getUserDoc: async () => {
         const appliance = await getDoc(doc(database, "appliance", auth.currentUser.uid));

@@ -19,18 +19,33 @@ const ApplianceScreen = ({navigation, route}) => {
         });
     }, []);
 
+    const editAppliance = () => {
+        navigation.navigate('EditAppliance', {id: appliance.id})
+    }
+    const removeAppliance = async () => {
+        console.log(route.params)
+        await ApplianceService.delete({id: route.params.id})
+        navigation.navigate('Home')
+        console.log('remove')
+    }
+
     return (
         <View>
             {loading && <div>Loading...</div>}
+
+            <Text>Appliance screen for {appliance.title}</Text>
             <Pressable
                 style={styles.button}
-                onPress={() =>
-                    navigation.navigate('EditAppliance', {id: appliance.id})
-                }
+                onPress={editAppliance}
             >
-                <Text style={styles.title}>Edit</Text>
+                <Text style={styles.title}>Редагувати</Text>
             </Pressable>
-            <Text>Appliance screen for {appliance.title}</Text>
+            <Pressable
+                style={styles.button}
+                onPress={removeAppliance}
+            >
+                <Text style={styles.title}>Видалити</Text>
+            </Pressable>
         </View>
     )
 }

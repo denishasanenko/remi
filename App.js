@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { StyleSheet, Image, Button, Text } from 'react-native';
+import React from 'react';
+import { StyleSheet, Image, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
@@ -8,27 +8,13 @@ import EditApplianceScreen from "./screens/EditApplianceScreen";
 import LoginScreen from "./screens/LoginScreen";
 import {auth} from "./firebase";
 import {signOut} from "firebase/auth"
-
-import { createNavigationContainerRef } from '@react-navigation/native';
-
-export const navigationRef = createNavigationContainerRef()
+import WelcomeScreen from "./screens/WelcomeScreen";
 
 const Stack = createNativeStackNavigator();
 const App = () => {
-    const [userData, setUserData] = useState(false);
-    auth.onAuthStateChanged((user) => {
-        if(!user) {
-            navigationRef.navigate('Login');
-        }
-        setUserData(user);
-    })
-
-    if (!userData) {
-        return <Text>{userData} - Loading APP...</Text>
-    }
 
   return (
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer>
           <Stack.Navigator
               screenOptions={{
                   headerStyle: {
@@ -54,6 +40,7 @@ const App = () => {
                   ),
               }}
           >
+              <Stack.Screen name="Root" component={WelcomeScreen} />
               <Stack.Screen
                   name="Home"
                   component={HomeScreen}
